@@ -1,0 +1,40 @@
+# ---- Python ----
+__pycache__/
+*.py[cod]
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+
+# ---- Virtual environments ----
+venv/
+.venv/
+env/
+.env/
+ENV/
+
+# ---- Environment files (secrets) ----
+*.env
+
+# ---- IDE / Editor settings ----
+.vscode/
+.idea/
+*.swp
+
+# ---- OS files ----
+.DS_Store
+Thumbs.db
+
+# ---- Alembic migrations cache ----
+alembic/versions/__pycache__/
+
+# ---- Logs ----
+*.log
+
+# ---- Coverage / testing ----
+.coverage
+*.cover
+htmlcov/
+.cache
+pytest_cache/
