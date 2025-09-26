@@ -5,7 +5,6 @@ from models.product.product_image import ProductImage
 from . import model
 from sqlalchemy.exc import IntegrityError
 import logging
-from typing import List
 
 
 logging.basicConfig(level=logging.info)
@@ -30,7 +29,7 @@ def createproduct(db:Session,create_product:model.CreateProduct ):
         db.add(newproduct)
         db.flush()
 
-        for images in create_product.image:
+        for images in create_product.images:
             product_images = ProductImage(
                 product_id = newproduct.id,
                 image_url = images.image_url,
@@ -52,8 +51,41 @@ def createproduct(db:Session,create_product:model.CreateProduct ):
         raise 
     except Exception as e :
         db.rollback()
-        logger.info(f"server:{e}")
+        logger.error(f"server:{e}")
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Server error"
+        )
+
+def getAllProduct(db:Session):
+    try:
+        product = db.query(Product).all()
+        return{
+            "message":"Successful",
+            "products":[prod.to_dict() for prod in product]
+        }
+    except Exception as e :
+        logger.error(f"server:{e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="server error "
+        )
+
+def getProductById(db:Session,id:int):
+    try:
+        product = db.query(Product).filter(Product.id == id).first()
+        if not product:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Product not found"
+            )
+        return{
+            "message":"successful",
+            "product":product.to_dict()
+        }
+    except Exception as e :
+        logger.error(f"server:{e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="server error"
         )

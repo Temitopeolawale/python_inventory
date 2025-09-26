@@ -45,11 +45,18 @@ def createCategory(db:Session, create_category:model.createCategory):
         )
 
 def getAllCategory(db:Session):
+    try:
         category=db.query(Category).all()
         return {
             "message":"success",
             "categories":[cat.to_dict() for cat in category]
         }
+    except Exception as e:
+        logger.error(f"server:{e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="internal server error"
+        )
 
 def getCategoryById(db:Session,id:int):
     try:

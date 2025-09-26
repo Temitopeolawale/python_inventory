@@ -22,6 +22,9 @@ class Product(Base):
     
 
     def to_dict(self):
-        return {c.name:getattr(self,c.name) for c in self.__table__.columns}
+        result = {c.name: getattr(self, c.name) for c in self.__table__.columns}
+        result['images'] = [img.to_dict() for img in self.image]
+        return result
+    
     def __repr__(self):
         return f"<Product name={self.name}>"

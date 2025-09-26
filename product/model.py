@@ -15,5 +15,5 @@ class CreateProduct(BaseModel):
     price:int
     sku:Optional[str]
     stock_quantity : int
-    image : List[AddProductImage]=[]
+    images : List[AddProductImage]=[]
 

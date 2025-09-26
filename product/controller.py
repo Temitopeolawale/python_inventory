@@ -12,3 +12,11 @@ router = APIRouter(
 @router.post("/create", status_code=status.HTTP_201_CREATED)
 def CreateProduct(create_product:model.CreateProduct, db:DbSession):
     return service.createproduct(db,create_product)
+
+@router.get("/",status_code=status.HTTP_200_OK)
+def GetAllProduct(db:DbSession):
+    return service.getAllProduct(db)
+
+@router.get("/{id}",status_code=status.HTTP_200_OK)
+def GetProductById(id:int,db:DbSession):
+    return service.getProductById(db,id)
