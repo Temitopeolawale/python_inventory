@@ -20,3 +20,7 @@ def GetAllProduct(db:DbSession):
 @router.get("/{id}",status_code=status.HTTP_200_OK)
 def GetProductById(id:int,db:DbSession):
     return service.getProductById(db,id)
+
+@router.put('/{id}',status_code=status.HTTP_200_OK)
+def UpdateProduct(id:int,update_product:model.UpdateProduct,db:DbSession):
+    return service.updateProduct(db,id,update_product)

@@ -102,11 +102,7 @@ def updateCategory(db: Session,id: int,update_category: model.updateCategory):
 
         return {
             "message": "Field Updated Successfully",
-            "category": {
-                "id": newcategory.id,
-                "name": newcategory.name,
-                "description": newcategory.description
-            }
+            "category": newcategory.to_dict()
         }
     except HTTPException:
         db.rollback()

@@ -89,3 +89,44 @@ def getProductById(db:Session,id:int):
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="server error"
         )
+    
+def updateProduct(db:Session,id:int,update_product:model.UpdateProduct):
+    try:
+        product = db.query(Product).filter(Product.id == id).first()
+        if not product:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="product not found"
+            )
+        if update_product.name:
+            prod_exist = db.query(Product).filter(Product.name == update_product.name).first()
+            if prod_exist and prod_exist.id !=id:
+                raise HTTPException(
+                    status_code=status.HTTP_409_CONFLICT,
+                    detail="Product already exist"
+                )
+            db.query(Product).filter(Product.id == id).update(update_product.dict(exclude_unset=True))
+        if update_product.images:
+            image_update = db.query(ProductImage).filter(ProductImage.product_id == id).all()
+            if not image_update:
+                raise HTTPException(
+                    status_code=status.HTTP_404_NOT_FOUND,
+                    detail="product id not found"
+                )
+            db.query(ProductImage).filter(ProductImage.product_id == id).update(update_product.images)
+        db.commit()
+        updated_product = db.query(Product).filter(Product.id == id).first()
+        return{
+            "message":"Product updated sussessfully",
+            "product":updated_product.to_dict()
+        }
+    except HTTPException:
+        db.rollback()
+        raise 
+    except Exception as e :
+        db.rollback()
+        logger.error(f"server:{e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="server error "
+        )
